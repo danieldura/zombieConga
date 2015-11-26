@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		BB14AE231C07927400FAF335 /* MyUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB14AE221C07927400FAF335 /* MyUtils.swift */; };
 		BB2A250F1BFD324B0044C058 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2A250E1BFD324B0044C058 /* AppDelegate.swift */; };
 		BB2A25131BFD324B0044C058 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2A25121BFD324B0044C058 /* GameScene.swift */; };
 		BB2A25151BFD324B0044C058 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2A25141BFD324B0044C058 /* GameViewController.swift */; };
@@ -16,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		BB14AE221C07927400FAF335 /* MyUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyUtils.swift; sourceTree = "<group>"; };
 		BB2A250B1BFD324B0044C058 /* ZombieConga.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZombieConga.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB2A250E1BFD324B0044C058 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		BB2A25121BFD324B0044C058 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -37,6 +39,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		BB14AE211C07925F00FAF335 /* MyUtils */ = {
+			isa = PBXGroup;
+			children = (
+				BB14AE221C07927400FAF335 /* MyUtils.swift */,
+			);
+			path = MyUtils;
+			sourceTree = "<group>";
+		};
 		BB2A25021BFD324B0044C058 = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +66,7 @@
 		BB2A250D1BFD324B0044C058 /* ZombieConga */ = {
 			isa = PBXGroup;
 			children = (
+				BB14AE211C07925F00FAF335 /* MyUtils */,
 				BB2A250E1BFD324B0044C058 /* AppDelegate.swift */,
 				BB2A25121BFD324B0044C058 /* GameScene.swift */,
 				BB2A25141BFD324B0044C058 /* GameViewController.swift */,
@@ -142,6 +153,7 @@
 				BB2A25131BFD324B0044C058 /* GameScene.swift in Sources */,
 				BB2A25151BFD324B0044C058 /* GameViewController.swift in Sources */,
 				BB2A250F1BFD324B0044C058 /* AppDelegate.swift in Sources */,
+				BB14AE231C07927400FAF335 /* MyUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,6 +303,7 @@
 				BB2A25231BFD324B0044C058 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

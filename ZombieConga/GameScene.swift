@@ -9,6 +9,7 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    let playableRect :CGRect
     var zombi:SKSpriteNode!
     var lastUpdateTime: NSTimeInterval = 0
     var dt: NSTimeInterval = 0
@@ -24,6 +25,7 @@ class GameScene: SKScene {
         
         addChild(background)
         initZombi()
+        DEBUG_PlayableArea()
     }
     func sceneTouched(touchLocation:CGPoint){
         moveZombieToward(touchLocation)
@@ -45,7 +47,7 @@ class GameScene: SKScene {
         let touchLocation = touch.locationInNode(self)
         sceneTouched(touchLocation)
     }
-   
+
     override func update(currentTime: CFTimeInterval) {
         moveSprite(zombi, velocity: velocity)
         if lastUpdateTime > 0{
@@ -56,7 +58,8 @@ class GameScene: SKScene {
         lastUpdateTime = currentTime
             print("\(dt*1000) milliseconds since las update")
         
-        
+        boundsCheckZombie()
+        rotateSprite(zombi, direction: velocity)
     }
     
     func initZombi(){
@@ -76,6 +79,10 @@ class GameScene: SKScene {
         sprite.position = CGPoint(x: sprite.position.x + amountToMove.x,
                                   y: sprite.position.y + amountToMove.y)
     }
+    func rotateSprite(sprite: SKSpriteNode, direction: CGPoint){
+        sprite.zRotation = CGFloat(
+            atan2(Double(direction.y), Double(direction.x)))
+    }
     
     func moveZombieToward(location:CGPoint){
         let offset = CGPoint(x: location.x - zombi.position.x,
@@ -87,6 +94,51 @@ class GameScene: SKScene {
                            y: direction.y * zombieMovePointsPerSec)
     }
     func boundsCheckZombie(){
+        let bottomLeft = CGPoint(x: 0, y: CGRectGetMinY(playableRect))
+        let topRight = CGPoint(x: size.width, y: CGRectGetMaxY(playableRect)    )
         
+        if zombi.position.x <= bottomLeft.x {
+            zombi.position.x = bottomLeft.x
+            velocity.x = -velocity.x
+            print("velocity in x:\(velocity.x)")
+        
+        }
+        if zombi.position.x >= topRight.x {
+            zombi.position.x = topRight.x
+            velocity.x = -velocity.x
+                    }
+        if zombi.position.y <= bottomLeft.y {
+            zombi.position.y = bottomLeft.y
+            velocity.y = -velocity.y
+        }
+        if zombi.position.y >= topRight.y{
+            zombi.position.y = topRight.y
+            velocity.y = -velocity.y
+        }
     }
+    
+    override init(size:CGSize) {
+        let maxAspectRatio:CGFloat = 16.0/9.0
+        let playableHeight = size.width / maxAspectRatio
+        let playableMargin = (size.height-playableHeight)/2.0
+        playableRect = CGRect(x:0, y: playableMargin,width: size.width, height: playableHeight)
+        super.init(size:size)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func DEBUG_PlayableArea(){
+    let shape = SKShapeNode()
+    let path = CGPathCreateMutable()
+        CGPathAddRect(path,nil, playableRect)
+        shape.path = path
+        shape.strokeColor = SKColor.redColor()
+        shape.lineWidth = 4.0
+        addChild(shape)
+    }
+    
+    
 }
