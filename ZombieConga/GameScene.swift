@@ -15,7 +15,7 @@ class GameScene: SKScene {
     var dt: NSTimeInterval = 0
     let zombieMovePointsPerSec: CGFloat = 480.0
     var velocity = CGPoint.zero
-    //var lastPlayerPoint:CGPoint
+    var lastPlayerPoint:CGPoint?
     
 
     
@@ -31,6 +31,7 @@ class GameScene: SKScene {
         DEBUG_PlayableArea()      
     }
     func sceneTouched(touchLocation:CGPoint){
+        lastPlayerPoint = touchLocation
         moveZombieToward(touchLocation)
     }
     
@@ -52,18 +53,26 @@ class GameScene: SKScene {
     }
 
     override func update(currentTime: CFTimeInterval) {
-        moveSprite(zombi, velocity: velocity)
+        
         if lastUpdateTime > 0{
             dt = currentTime - lastUpdateTime
         }else{
-                dt = 0
+            dt = 0
         }
         lastUpdateTime = currentTime
             print("\(dt*1000) milliseconds since las update")
-        
-        boundsCheckZombie()
-        rotateSprite(zombi, direction: velocity)
-    }
+        if let lastPlayerPoint = lastPlayerPoint{
+            let diff = lastPlayerPoint - zombi.position
+            if (diff.length() <= zombieMovePointsPerSec * CGFloat(dt)) {
+                zombi.position = lastPlayerPoint
+                velocity = CGPointZero
+            }else{
+                rotateSprite(zombi, direction: velocity)
+                moveSprite(zombi, velocity: velocity)
+            }
+        }
+        boundsCheckZombie()        
+        }
     
     func initZombi(){
         zombi = SKSpriteNode(imageNamed: "zombie1")
