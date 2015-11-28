@@ -15,6 +15,9 @@ class GameScene: SKScene {
     var dt: NSTimeInterval = 0
     let zombieMovePointsPerSec: CGFloat = 480.0
     var velocity = CGPoint.zero
+    //var lastPlayerPoint:CGPoint
+    
+
     
     override func didMoveToView(view: SKView) {
         let background = SKSpriteNode(imageNamed: "background1")
@@ -25,7 +28,7 @@ class GameScene: SKScene {
         
         addChild(background)
         initZombi()
-        DEBUG_PlayableArea()
+        DEBUG_PlayableArea()      
     }
     func sceneTouched(touchLocation:CGPoint){
         moveZombieToward(touchLocation)
@@ -70,29 +73,49 @@ class GameScene: SKScene {
         addChild(zombi)
     }
     
+//    func moveSprite(sprite: SKSpriteNode, velocity: CGPoint){
+//        let amountToMove = CGPoint(x: velocity.x * CGFloat(dt),
+//                                   y: velocity.y * CGFloat(dt))
+//        
+//        print("Amout to move: \(amountToMove)")
+//        
+//        sprite.position = CGPoint(x: sprite.position.x + amountToMove.x,
+//                                  y: sprite.position.y + amountToMove.y)
+//    }
+    
     func moveSprite(sprite: SKSpriteNode, velocity: CGPoint){
-        let amountToMove = CGPoint(x: velocity.x * CGFloat(dt),
-                                   y: velocity.y * CGFloat(dt))
-        
-        print("Amout to move: \(amountToMove)")
-        
-        sprite.position = CGPoint(x: sprite.position.x + amountToMove.x,
-                                  y: sprite.position.y + amountToMove.y)
-    }
-    func rotateSprite(sprite: SKSpriteNode, direction: CGPoint){
-        sprite.zRotation = CGFloat(
-            atan2(Double(direction.y), Double(direction.x)))
+        let amountToMove = velocity * CGFloat(dt)
+        sprite.position += amountToMove
     }
     
-    func moveZombieToward(location:CGPoint){
-        let offset = CGPoint(x: location.x - zombi.position.x,
-                             y: location.y - zombi.position.y)
-        let length = sqrt(Double(offset.x * offset.x + offset.y * offset.y))
-        let direction = CGPoint(x: offset.x / CGFloat(length),
-                                y: offset.y / CGFloat(length))
-        velocity = CGPoint(x: direction.x * zombieMovePointsPerSec,
-                           y: direction.y * zombieMovePointsPerSec)
+//    func rotateSprite(sprite: SKSpriteNode, direction: CGPoint){
+//        sprite.zRotation = CGFloat(
+//            atan2(Double(direction.y), Double(direction.x)))
+//    }
+    
+    func rotateSprite(sprite: SKSpriteNode, direction: CGPoint){
+        sprite.zRotation = atan2(direction.y, direction.x)
     }
+
+    
+//    func moveZombieToward(location:CGPoint){
+//        let offset = CGPoint(x: location.x - zombi.position.x,
+//                             y: location.y - zombi.position.y)
+//        let length = sqrt(Double(offset.x * offset.x + offset.y * offset.y))
+//        let direction = CGPoint(x: offset.x / CGFloat(length),
+//                                y: offset.y / CGFloat(length))
+//        velocity = CGPoint(x: direction.x * zombieMovePointsPerSec,
+//                           y: direction.y * zombieMovePointsPerSec)
+//    }
+    
+    func moveZombieToward(location:CGPoint){
+        let offset = location - zombi.position
+        let length = sqrt(Double(offset.x * offset.x + offset.y * offset.y))
+        let direction = offset / CGFloat(length)
+        velocity = direction * zombieMovePointsPerSec
+
+    }
+    
     func boundsCheckZombie(){
         let bottomLeft = CGPoint(x: 0, y: CGRectGetMinY(playableRect))
         let topRight = CGPoint(x: size.width, y: CGRectGetMaxY(playableRect)    )
