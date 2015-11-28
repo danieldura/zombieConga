@@ -79,8 +79,32 @@ extension CGPoint{
     var angle: CGFloat {
         return atan2(y, x)
     }
-    
 }
+
+// MARK: Make the rotation zombie more smoothly to be realist
+let pi = CGFloat(M_PI)
+    func shortestAngleBetween(angle1: CGFloat,
+        angle2: CGFloat) -> CGFloat{
+            
+        let twoPi = pi * 2.0
+        var angle = (angle2 - angle1) % twoPi
+        if (angle >= pi){
+            angle = angle - twoPi
+        }
+            if (angle <= -pi){
+                angle = angle + twoPi
+            }
+            return angle
+    }
+
+
+
+extension CGFloat{
+    func sign() -> CGFloat {
+    return (self >= 0.0) ? 1.0 : -1.0
+    }
+}
+
 
 
 

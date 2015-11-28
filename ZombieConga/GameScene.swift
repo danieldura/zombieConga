@@ -16,8 +16,7 @@ class GameScene: SKScene {
     let zombieMovePointsPerSec: CGFloat = 480.0
     var velocity = CGPoint.zero
     var lastPlayerPoint:CGPoint?
-    
-
+    let zombieRotateRadiansPerSec:CGFloat = 4.0 * pi
     
     override func didMoveToView(view: SKView) {
         let background = SKSpriteNode(imageNamed: "background1")
@@ -67,8 +66,8 @@ class GameScene: SKScene {
                 zombi.position = lastPlayerPoint
                 velocity = CGPointZero
             }else{
-                rotateSprite(zombi, direction: velocity)
                 moveSprite(zombi, velocity: velocity)
+                rotateSprite(zombi, direction: velocity,rotateRadianPerSec: zombieRotateRadiansPerSec)
             }
         }
         boundsCheckZombie()        
@@ -102,8 +101,11 @@ class GameScene: SKScene {
 //            atan2(Double(direction.y), Double(direction.x)))
 //    }
     
-    func rotateSprite(sprite: SKSpriteNode, direction: CGPoint){
-        sprite.zRotation = atan2(direction.y, direction.x)
+    func rotateSprite(sprite: SKSpriteNode, direction: CGPoint,
+                            rotateRadianPerSec: CGFloat){
+        let shortest = shortestAngleBetween(sprite.zRotation, angle2: velocity.angle)
+        let amountToRotate = min(rotateRadianPerSec * CGFloat(dt), abs(shortest))
+        sprite.zRotation += shortest.sign() * amountToRotate
     }
 
     
@@ -122,7 +124,6 @@ class GameScene: SKScene {
         let length = sqrt(Double(offset.x * offset.x + offset.y * offset.y))
         let direction = offset / CGFloat(length)
         velocity = direction * zombieMovePointsPerSec
-
     }
     
     func boundsCheckZombie(){
@@ -132,8 +133,6 @@ class GameScene: SKScene {
         if zombi.position.x <= bottomLeft.x {
             zombi.position.x = bottomLeft.x
             velocity.x = -velocity.x
-            print("velocity in x:\(velocity.x)")
-        
         }
         if zombi.position.x >= topRight.x {
             zombi.position.x = topRight.x
