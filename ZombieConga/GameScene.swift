@@ -11,8 +11,6 @@ import SpriteKit
 class GameScene: SKScene {
     let playableRect :CGRect
     var zombi:SKSpriteNode!
-//    var enemy:SKSpriteNode!
-
     var lastUpdateTime: NSTimeInterval = 0
     var dt: NSTimeInterval = 0
     let zombieMovePointsPerSec: CGFloat = 480.0
@@ -63,8 +61,7 @@ class GameScene: SKScene {
             dt = 0
         }
         lastUpdateTime = currentTime
-            print("\(dt*1000) milliseconds since las update")
-        if let lastPlayerPoint = lastPlayerPoint{
+            if let lastPlayerPoint = lastPlayerPoint{
             let diff = lastPlayerPoint - zombi.position
             if (diff.length() <= zombieMovePointsPerSec * CGFloat(dt)) {
                 zombi.position = lastPlayerPoint
@@ -176,9 +173,19 @@ class GameScene: SKScene {
         enemy.position = CGPoint(x: size.width + enemy.size.width/2,
                                  y: size.height/2)
         addChild(enemy)
-        let actionMove = SKAction.moveTo(
-            CGPoint(x: -enemy.size.width/2,
-                    y: enemy.position.y), duration: 2.0)
-        enemy.runAction(actionMove)
+        //let actionMidMove = SKAction.moveTo(CGPoint(x: size.width/2, y: CGRectGetMinY(playableRect) + enemy.size.height/2), duration: 1.0)
+        let actionMidMove = SKAction.moveByX(-size.width/2-enemy.size.width/2, y:-CGRectGetHeight(playableRect)/2 + enemy.size.height/2, duration: 1.0)
+        
+        let actionMove = SKAction.moveByX(-size.width/2-enemy.size.width/2, y:CGRectGetHeight(playableRect)/2 - enemy.size.height/2, duration: 1.0)
+        let wait = SKAction.waitForDuration(0.25)
+        let logMessage = SKAction.runBlock(){
+            print("Reached bottom!")
+        }
+        let reverseMid = actionMidMove.reversedAction()
+        let reverseMove = actionMove.reversedAction()
+        let sequence = SKAction.sequence([actionMidMove,logMessage,wait, actionMove,
+                                            reverseMove, logMessage, reverseMid])
+        let repeatAction = SKAction.repeatActionForever(sequence)
+        enemy.runAction(repeatAction)
     }
 }
