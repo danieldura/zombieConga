@@ -20,6 +20,9 @@ class GameScene: SKScene {
     
     let zombieAnimation: SKAction
     
+    let catCollisionSound: SKAction = SKAction.playSoundFileNamed("hitCat.wav", waitForCompletion: false)
+    let enemyCollisionSound: SKAction = SKAction.playSoundFileNamed("hitCatLady.wav", waitForCompletion: false)
+    
     override func didMoveToView(view: SKView) {
         let background = SKSpriteNode(imageNamed: "background1")
         background.position = CGPoint(x: size.width/2, y: size.height/2)
@@ -77,8 +80,12 @@ class GameScene: SKScene {
             }
         }
         boundsCheckZombie()
-        checkCollisions()   
+//        checkCollisions()
         }
+    
+    override func didEvaluateActions() {
+        checkCollisions()
+    }
     
     func initZombi(){
         zombi = SKSpriteNode(imageNamed: "zombie1")
@@ -259,9 +266,11 @@ class GameScene: SKScene {
     
 // MARK: Collision fuctions
     func zombieHitCat(cat: SKSpriteNode){
+        runAction(catCollisionSound)
         cat.removeFromParent()
     }
     func zombieHitEnemy(enemy: SKSpriteNode){
+        runAction(enemyCollisionSound)
         enemy.removeFromParent()
     }
     func checkCollisions(){
