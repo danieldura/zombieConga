@@ -24,6 +24,10 @@ class GameScene: SKScene {
     let enemyCollisionSound: SKAction = SKAction.playSoundFileNamed("hitCatLady.wav", waitForCompletion: false)
     
     var invincible = false
+    let catMovePointPerSec:CGFloat = 480.0
+    
+    
+    
     override func didMoveToView(view: SKView) {
         let background = SKSpriteNode(imageNamed: "background1")
         background.position = CGPoint(x: size.width/2, y: size.height/2)
@@ -81,8 +85,8 @@ class GameScene: SKScene {
             }
         }
         boundsCheckZombie()
-//        checkCollisions()
-        }
+        moveTrain()
+    }
     
     override func didEvaluateActions() {
         checkCollisions()
@@ -90,48 +94,24 @@ class GameScene: SKScene {
     
     func initZombi(){
         zombi = SKSpriteNode(imageNamed: "zombie1")
-        
+        zombi.zPosition = 100
         zombi.position = CGPoint(x: 400, y: 400)
-        //zombi.setScale(2)
+
         addChild(zombi)
-        
-       
-        
     }
-    
-//    func moveSprite(sprite: SKSpriteNode, velocity: CGPoint){
-//        let amountToMove = CGPoint(x: velocity.x * CGFloat(dt),
-//                                   y: velocity.y * CGFloat(dt))
-//        
-//        print("Amout to move: \(amountToMove)")
-//        
-//        sprite.position = CGPoint(x: sprite.position.x + amountToMove.x,
-//                                  y: sprite.position.y + amountToMove.y)
-//    }
     
     func moveSprite(sprite: SKSpriteNode, velocity: CGPoint){
         let amountToMove = velocity * CGFloat(dt)
         sprite.position += amountToMove
     }
-//    func rotateSprite(sprite: SKSpriteNode, direction: CGPoint){
-//        sprite.zRotation = CGFloat(
-//            atan2(Double(direction.y), Double(direction.x)))
-//    }
+
     func rotateSprite(sprite: SKSpriteNode, direction: CGPoint,
                             rotateRadianPerSec: CGFloat){
         let shortest = shortestAngleBetween(sprite.zRotation, angle2: velocity.angle)
         let amountToRotate = min(rotateRadianPerSec * CGFloat(dt), abs(shortest))
         sprite.zRotation += shortest.sign() * amountToRotate
     }
-//    func moveZombieToward(location:CGPoint){
-//        let offset = CGPoint(x: location.x - zombi.position.x,
-//                             y: location.y - zombi.position.y)
-//        let length = sqrt(Double(offset.x * offset.x + offset.y * offset.y))
-//        let direction = CGPoint(x: offset.x / CGFloat(length),
-//                                y: offset.y / CGFloat(length))
-//        velocity = CGPoint(x: direction.x * zombieMovePointsPerSec,
-//                           y: direction.y * zombieMovePointsPerSec)
-//    }
+
     
     func moveZombieToward(location:CGPoint){
         startZombieAnimation()
@@ -190,8 +170,8 @@ class GameScene: SKScene {
     
     
     func DEBUG_PlayableArea(){
-    let shape = SKShapeNode()
-    let path = CGPathCreateMutable()
+        let shape = SKShapeNode()
+        let path = CGPathCreateMutable()
         CGPathAddRect(path,nil, playableRect)
         shape.path = path
         shape.strokeColor = SKColor.redColor()
@@ -207,20 +187,7 @@ class GameScene: SKScene {
                                     min: CGRectGetMinY(playableRect) + enemy.size.height/2,
                                     max: CGRectGetMaxY(playableRect) - enemy.size.height/2))
         addChild(enemy)
-        //let actionMidMove = SKAction.moveTo(CGPoint(x: size.width/2, y: CGRectGetMinY(playableRect) + enemy.size.height/2), duration: 1.0)
-//        let actionMidMove = SKAction.moveByX(-size.width/2-enemy.size.width/2, y:-CGRectGetHeight(playableRect)/2 + enemy.size.height/2, duration: 1.0)
-//        
-//        let actionMove = SKAction.moveByX(-size.width/2-enemy.size.width/2, y:CGRectGetHeight(playableRect)/2 - enemy.size.height/2, duration: 1.0)
-//        let wait = SKAction.waitForDuration(0.25)
-//        let logMessage = SKAction.runBlock(){
-//            print("Reached bottom!")
-//        }
-//        let reverseMid = actionMidMove.reversedAction()
-//        let reverseMove = actionMove.reversedAction()
-//        let sequence = SKAction.sequence([actionMidMove,logMessage,wait, actionMove,
-//                                            reverseMove, logMessage, reverseMid])
-//        let repeatAction = SKAction.repeatActionForever(sequence)
-        
+
         let actionMove = SKAction.moveToX(-enemy.size.width/2, duration:2.0)
         let actionRemove = SKAction.removeFromParent()
         enemy.runAction(SKAction.sequence([actionMove, actionRemove]))
@@ -269,7 +236,15 @@ class GameScene: SKScene {
 // MARK: Collision fuctions
     func zombieHitCat(cat: SKSpriteNode){
         runAction(catCollisionSound)
-        cat.removeFromParent()
+//        cat.removeFromParent()
+        cat.name="train"
+        cat.removeAllActions()
+        let greenColor = SKAction.colorizeWithColor(SKColor.greenColor(), colorBlendFactor: 1.0, duration: 0.2)
+        let scaleNormal = SKAction.scaleTo(1.0, duration: 0.5)
+        
+        let group = [greenColor,scaleNormal]
+        cat.runAction(SKAction.sequence(group))
+        
     }
     func zombieHitEnemy(enemy: SKSpriteNode){
         runAction(enemyCollisionSound)
@@ -320,5 +295,26 @@ class GameScene: SKScene {
         for enemy in hitEnemies{
                 zombieHitEnemy(enemy)
         }
+    }
+    
+    func moveTrain(){
+        var targetPosition = zombi.position
+        
+        enumerateChildNodesWithName("train") {
+            node, _ in
+            if !node.hasActions(){
+                let actionDuration = 0.3
+                let offset = targetPosition - node.position
+                let direcction = offset.normalized()
+                let amountToMovePerSec = direcction * self.catMovePointPerSec
+                let amountToMove = amountToMovePerSec * CGFloat(actionDuration)
+                let moveAction = SKAction.moveByX(amountToMove.x,y:amountToMove.y, duration: actionDuration)
+                node.runAction(moveAction)
+                
+            }
+            targetPosition = node.position
+        }
+    
+    
     }
 }
