@@ -31,6 +31,7 @@ class GameScene: SKScene {
     
     
     override func didMoveToView(view: SKView) {
+        playBackgroundMusic("backgroundMusic.mp3")
         let background = SKSpriteNode(imageNamed: "background1")
         background.position = CGPoint(x: size.width/2, y: size.height/2)
         
@@ -43,7 +44,7 @@ class GameScene: SKScene {
 
         runAction(SKAction.repeatActionForever(SKAction.sequence([SKAction.runBlock(spawnEnemy),SKAction.waitForDuration(2.0)])))
         runAction(SKAction.repeatActionForever(SKAction.sequence([SKAction.runBlock(spawnCat),SKAction.waitForDuration(1.0)])))
-        DEBUG_PlayableArea()
+//        DEBUG_PlayableArea()
     }
     func sceneTouched(touchLocation:CGPoint){
         lastPlayerPoint = touchLocation
@@ -92,6 +93,7 @@ class GameScene: SKScene {
         if lives <= 0 && !gameOver {
             gameOver = true
             print("HAS PERDIDO·")
+            backgroundMusicPlayer.stop()
             
             let gameOverScene = GameOverScene(size: size, won: false)
             gameOverScene.scaleMode = scaleMode
@@ -333,7 +335,7 @@ class GameScene: SKScene {
         if trainCount >= 15 && !gameOver {
             gameOver = true
             print("Has ganado")
-            
+            backgroundMusicPlayer.stop()
             
             let gameOverScene = GameOverScene(size: size, won: true)
             gameOverScene.scaleMode = scaleMode
