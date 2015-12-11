@@ -14,6 +14,7 @@
 		BB2A25181BFD324B0044C058 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB2A25161BFD324B0044C058 /* Main.storyboard */; };
 		BB2A251A1BFD324B0044C058 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB2A25191BFD324B0044C058 /* Assets.xcassets */; };
 		BB2A251D1BFD324B0044C058 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB2A251B1BFD324B0044C058 /* LaunchScreen.storyboard */; };
+		BB7EBC2F1C1A4AEE0039161F /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB7EBC2E1C1A4AEE0039161F /* GameOverScene.swift */; };
 		BBA3D4E51C10C50300DCBDB4 /* backgroundMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = BBA3D4E01C10C50300DCBDB4 /* backgroundMusic.mp3 */; };
 		BBA3D4E61C10C50300DCBDB4 /* hitCat.wav in Resources */ = {isa = PBXBuildFile; fileRef = BBA3D4E11C10C50300DCBDB4 /* hitCat.wav */; };
 		BBA3D4E71C10C50300DCBDB4 /* hitCatLady.wav in Resources */ = {isa = PBXBuildFile; fileRef = BBA3D4E21C10C50300DCBDB4 /* hitCatLady.wav */; };
@@ -31,6 +32,7 @@
 		BB2A25191BFD324B0044C058 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		BB2A251C1BFD324B0044C058 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB2A251E1BFD324B0044C058 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		BB7EBC2E1C1A4AEE0039161F /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOverScene.swift; sourceTree = "<group>"; };
 		BBA3D4E01C10C50300DCBDB4 /* backgroundMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundMusic.mp3; sourceTree = "<group>"; };
 		BBA3D4E11C10C50300DCBDB4 /* hitCat.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = hitCat.wav; sourceTree = "<group>"; };
 		BBA3D4E21C10C50300DCBDB4 /* hitCatLady.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = hitCatLady.wav; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				BB14AE211C07925F00FAF335 /* MyUtils */,
 				BB2A250E1BFD324B0044C058 /* AppDelegate.swift */,
 				BB2A25121BFD324B0044C058 /* GameScene.swift */,
+				BB7EBC2E1C1A4AEE0039161F /* GameOverScene.swift */,
 				BB2A25141BFD324B0044C058 /* GameViewController.swift */,
 				BB2A25161BFD324B0044C058 /* Main.storyboard */,
 				BB2A25191BFD324B0044C058 /* Assets.xcassets */,
@@ -178,6 +181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BB7EBC2F1C1A4AEE0039161F /* GameOverScene.swift in Sources */,
 				BB2A25131BFD324B0044C058 /* GameScene.swift in Sources */,
 				BB2A25151BFD324B0044C058 /* GameViewController.swift in Sources */,
 				BB2A250F1BFD324B0044C058 /* AppDelegate.swift in Sources */,

@@ -9,6 +9,8 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    var lives = 5
+    var gameOver = false
     let playableRect :CGRect
     var zombi:SKSpriteNode!
     var lastUpdateTime: NSTimeInterval = 0
@@ -86,6 +88,18 @@ class GameScene: SKScene {
         }
         boundsCheckZombie()
         moveTrain()
+        
+        if lives <= 0 && !gameOver {
+            gameOver = true
+            print("HAS PERDIDO·")
+            
+            let gameOverScene = GameOverScene(size: size, won: false)
+            gameOverScene.scaleMode = scaleMode
+            
+            let reveal = SKTransition.flipHorizontalWithDuration(0.5)
+            
+            view?.presentScene(gameOverScene, transition: reveal)
+        }
     }
     
     override func didEvaluateActions() {
@@ -248,6 +262,8 @@ class GameScene: SKScene {
     }
     func zombieHitEnemy(enemy: SKSpriteNode){
         runAction(enemyCollisionSound)
+        loseCats()
+        lives--
         enemy.removeFromParent()
         
         invincible = true
@@ -299,7 +315,7 @@ class GameScene: SKScene {
     
     func moveTrain(){
         var targetPosition = zombi.position
-        
+        var trainCount = 0
         enumerateChildNodesWithName("train") {
             node, _ in
             if !node.hasActions(){
@@ -310,11 +326,50 @@ class GameScene: SKScene {
                 let amountToMove = amountToMovePerSec * CGFloat(actionDuration)
                 let moveAction = SKAction.moveByX(amountToMove.x,y:amountToMove.y, duration: actionDuration)
                 node.runAction(moveAction)
-                
+                trainCount++
             }
             targetPosition = node.position
         }
+        if trainCount >= 15 && !gameOver {
+            gameOver = true
+            print("Has ganado")
+            
+            
+            let gameOverScene = GameOverScene(size: size, won: true)
+            gameOverScene.scaleMode = scaleMode
+            let reveal = SKTransition.flipHorizontalWithDuration(0.5)
+            
+            view?.presentScene(gameOverScene, transition: reveal)
+            
+        }
+    
+    }
     
     
+  // MARK: -
+
+    func loseCats(){
+        var loseCount = 0
+        
+        enumerateChildNodesWithName("train"){ node, stop in
+            var randomSpot = node.position
+            randomSpot.x += CGFloat.random(min: -100, max: 100)
+            randomSpot.y += CGFloat.random(min: -100, max: 100)
+            
+            node.name=""
+            node.runAction(
+                SKAction.sequence([
+                    SKAction.group([
+                        SKAction.rotateByAngle(pi*4, duration: 1.0),
+                        SKAction.moveTo(randomSpot,duration: 1.0),
+                        SKAction.scaleTo(0, duration: 1.0)
+                    ]),
+                    SKAction.removeFromParent()
+                ]))
+            loseCount++
+            if loseCount >= 2{
+                stop.memory = true
+            }
+        }
     }
 }
