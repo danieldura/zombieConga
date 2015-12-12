@@ -30,26 +30,26 @@ class GameScene: SKScene {
     
     // MARK: CAMERA
     let cameraNode = SKCameraNode()
-    
+    let cameraMovePointsPerSec: CGFloat = 200.0
     
     
     override func didMoveToView(view: SKView) {
         playBackgroundMusic("backgroundMusic.mp3")
-        let background = SKSpriteNode(imageNamed: "background1")
-        background.position = CGPoint(x: size.width/2, y: size.height/2)
-        
-        background.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        let background = backgroundNode()
+        background.position = CGPoint.zero
+        background.anchorPoint = CGPoint.zero
         background.zPosition = -1
-        
+        background.name = "background"
         addChild(background)
         
         initZombi()
 
         runAction(SKAction.repeatActionForever(SKAction.sequence([SKAction.runBlock(spawnEnemy),SKAction.waitForDuration(2.0)])))
         runAction(SKAction.repeatActionForever(SKAction.sequence([SKAction.runBlock(spawnCat),SKAction.waitForDuration(1.0)])))
-        
-        setCameraPosition(CGPoint(x: size.width/2, y:size.height/2))
         addChild(cameraNode)
+        camera = cameraNode
+        setCameraPosition(CGPoint(x: size.width/2, y:size.height/2))
+        
     }
     func sceneTouched(touchLocation:CGPoint){
         lastPlayerPoint = touchLocation
@@ -94,6 +94,7 @@ class GameScene: SKScene {
         }
         boundsCheckZombie()
         moveTrain()
+        moveCamera()
         
         if lives <= 0 && !gameOver {
             gameOver = true
@@ -189,17 +190,6 @@ class GameScene: SKScene {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    
-    func DEBUG_PlayableArea(){
-        let shape = SKShapeNode()
-        let path = CGPathCreateMutable()
-        CGPathAddRect(path,nil, playableRect)
-        shape.path = path
-        shape.strokeColor = SKColor.redColor()
-        shape.lineWidth = 4.0
-        addChild(shape)
     }
     
     func spawnEnemy() {
@@ -400,7 +390,34 @@ class GameScene: SKScene {
     func setCameraPosition(position: CGPoint) {
         cameraNode.position = CGPoint(x: position.x, y: position.y - overlapAmount()/2)
     }
+
+    func moveCamera(){
+        let backgroundVelocity = CGPoint(x: cameraMovePointsPerSec, y: 0)
+        let amountToMove = backgroundVelocity * CGFloat(dt)
+        cameraNode.position += amountToMove
+    }
     
+// MARK: Scrolling background
+    
+    func backgroundNode() -> SKSpriteNode {
+        let backgroundNode = SKSpriteNode()
+        backgroundNode.anchorPoint = CGPoint.zero
+        backgroundNode.name =  "background"
+        
+        let background1 = SKSpriteNode(imageNamed: "background1")
+        background1.anchorPoint = CGPoint.zero
+        background1.position = CGPoint(x:0, y:0)
+        backgroundNode.addChild(background1)
+        
+        let background2 = SKSpriteNode(imageNamed: "background2")
+        background2.anchorPoint = CGPoint.zero
+        background2.position = CGPoint(x:background1.size.width, y:0)
+        backgroundNode.addChild(background2)
+        
+        backgroundNode.size = CGSize(width: background1.size.width + background2.size.width, height: background1.size.height)
+        
+        return backgroundNode
+    }
     
     
 }
