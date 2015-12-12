@@ -28,6 +28,9 @@ class GameScene: SKScene {
     var invincible = false
     let catMovePointPerSec:CGFloat = 480.0
     
+    // MARK: CAMERA
+    let cameraNode = SKCameraNode()
+    
     
     
     override func didMoveToView(view: SKView) {
@@ -44,7 +47,9 @@ class GameScene: SKScene {
 
         runAction(SKAction.repeatActionForever(SKAction.sequence([SKAction.runBlock(spawnEnemy),SKAction.waitForDuration(2.0)])))
         runAction(SKAction.repeatActionForever(SKAction.sequence([SKAction.runBlock(spawnCat),SKAction.waitForDuration(1.0)])))
-//        DEBUG_PlayableArea()
+        
+        setCameraPosition(CGPoint(x: size.width/2, y:size.height/2))
+        addChild(cameraNode)
     }
     func sceneTouched(touchLocation:CGPoint){
         lastPlayerPoint = touchLocation
@@ -102,6 +107,8 @@ class GameScene: SKScene {
             
             view?.presentScene(gameOverScene, transition: reveal)
         }
+        
+//        cameraNode.position = zombi.position
     }
     
     override func didEvaluateActions() {
@@ -374,4 +381,26 @@ class GameScene: SKScene {
             }
         }
     }
+    
+    // MARK: CAMERA METHODS
+    func overlapAmount() -> CGFloat {
+        guard let view = self.view else {
+            return 0
+        }
+        let scale = view.bounds.size.width / self.size.width
+        let scaleHeight = self.size.height * scale
+        let scaledOverlap = scaleHeight - view.bounds.size.height
+        return scaledOverlap / scale
+    }
+    func getCameraPosition() -> CGPoint {
+        return CGPoint(x: cameraNode.position.x, y: cameraNode.position.y + overlapAmount()/2)
+        
+    }
+    
+    func setCameraPosition(position: CGPoint) {
+        cameraNode.position = CGPoint(x: position.x, y: position.y - overlapAmount()/2)
+    }
+    
+    
+    
 }
