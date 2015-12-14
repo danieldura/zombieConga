@@ -27,6 +27,7 @@ class GameScene: SKScene {
     
     var invincible = false
     let catMovePointPerSec:CGFloat = 480.0
+    let livesLabel = SKLabelNode(fontNamed: "Chalkduster")
     
     // MARK: CAMERA
     let cameraNode = SKCameraNode()
@@ -61,6 +62,16 @@ class GameScene: SKScene {
         camera = cameraNode
         setCameraPosition(CGPoint(x: size.width/2, y:size.height/2))
         
+        livesLabel.text = "Lives: \(lives)"
+        livesLabel.fontColor = SKColor.blackColor()
+        livesLabel.fontSize = 100
+        livesLabel.zPosition = 100
+        livesLabel.horizontalAlignmentMode = .Left
+        livesLabel.verticalAlignmentMode = .Bottom
+        livesLabel.position = CGPoint(
+            x: -playableRect.size.width/2 + CGFloat(20),
+            y: -playableRect.size.height/2 + CGFloat(20) + overlapAmount()/2)
+        cameraNode.addChild(livesLabel)
     }
     func sceneTouched(touchLocation:CGPoint){
         lastPlayerPoint = touchLocation
@@ -357,7 +368,7 @@ class GameScene: SKScene {
             view?.presentScene(gameOverScene, transition: reveal)
             
         }
-    
+    livesLabel.text = "Lives: \(lives)"
     }
     
     
