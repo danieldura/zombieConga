@@ -28,6 +28,8 @@ class GameScene: SKScene {
     var invincible = false
     let catMovePointPerSec:CGFloat = 480.0
     let livesLabel = SKLabelNode(fontNamed: "Chalkduster")
+    let catsLabel = SKLabelNode(fontNamed: "Chalkduster")
+    
     
     // MARK: CAMERA
     let cameraNode = SKCameraNode()
@@ -72,6 +74,20 @@ class GameScene: SKScene {
             x: -playableRect.size.width/2 + CGFloat(20),
             y: -playableRect.size.height/2 + CGFloat(20) + overlapAmount()/2)
         cameraNode.addChild(livesLabel)
+        
+        catsLabel.text = "Cats:"
+        catsLabel.fontColor = SKColor.blackColor()
+        catsLabel.fontSize = 100
+        catsLabel.zPosition = 100
+        catsLabel.horizontalAlignmentMode = .Right
+        catsLabel.verticalAlignmentMode = .Bottom
+        catsLabel.position = CGPoint(
+            x: playableRect.width/2 - CGFloat(20),
+            y: -playableRect.size.height/2 + CGFloat(20) + overlapAmount()/2)
+        
+        print("posicion",catsLabel.position)
+        cameraNode.addChild(catsLabel)
+        
     }
     func sceneTouched(touchLocation:CGPoint){
         lastPlayerPoint = touchLocation
@@ -342,8 +358,9 @@ class GameScene: SKScene {
     func moveTrain(){
         var targetPosition = zombi.position
         var trainCount = 0
-        enumerateChildNodesWithName("train") {
-            node, _ in
+        enumerateChildNodesWithName("train") {node, stop in
+            trainCount++
+
             if !node.hasActions(){
                 let actionDuration = 0.3
                 let offset = targetPosition - node.position
@@ -352,7 +369,7 @@ class GameScene: SKScene {
                 let amountToMove = amountToMovePerSec * CGFloat(actionDuration)
                 let moveAction = SKAction.moveByX(amountToMove.x,y:amountToMove.y, duration: actionDuration)
                 node.runAction(moveAction)
-                trainCount++
+                
             }
             targetPosition = node.position
         }
@@ -369,6 +386,7 @@ class GameScene: SKScene {
             
         }
     livesLabel.text = "Lives: \(lives)"
+    self.catsLabel.text = "Cats: \(trainCount)"
     }
     
     
